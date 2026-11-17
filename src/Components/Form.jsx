@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 
 const Dropdown = ({ question, options, handleSelect, selected }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -95,29 +94,6 @@ const Form = (uid, setActive) => {
     G9: "",
   });
 
-  const getUserData = async (uid) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:1337/api/userdata?filters[uid][$eq]=${uid}`
-      );
-      return response.data;
-    } catch (error) {
-      // Handle error appropriately
-      throw error;
-    }
-  };
-
-  // Usage example:
-  getUserData(uid.uid)
-    .then((userData) => {
-      setRelationId(userData.data[0].id);
-      setEmail(userData.data[0].attributes.email);
-      // Do something with the retrieved user data
-    })
-    .catch((error) => {
-      // Handle any errors occurred during the API call
-      console.error("Error:", error);
-    });
 
   const currentBudget = ["20L-30L", "30L-50L", "50L-80L", "80L-100L", "100L+"];
 
@@ -280,37 +256,7 @@ const Form = (uid, setActive) => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = {
-      user: relationId,
-      type: selectedOption,
-      ...answers,
-    };
-
-    // Now 'data' holds the required structure to post on the API link
-    axios
-      .post("http://localhost:1337/api/forms", { data })
-      .then((response) => {
-        // Handle the response data or perform actions based on the response
-        // Post notification data
-        const notificationData = {
-          email: email,
-          message: "Form Submitted Successfully",
-        };
-
-        axios
-          .post("http://localhost:1337/api/notifications", {
-            data: notificationData,
-          })
-          .then((notificationResponse) => {
-            // Handle the notification response or perform actions based on it
-          })
-          .catch((notificationError) => {
-            // Handle errors or display error messages for notification post
-          });
-      })
-      .catch((error) => {
-        // Handle errors or display error messages
-      });
+    alert("Demo mode — form submission is disabled in this preview. In the full deployment, your application would be submitted to the AICTE portal.");
   };
 
   const [isOpen, setIsOpen] = useState(false);

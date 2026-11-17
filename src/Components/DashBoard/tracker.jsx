@@ -1,59 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import QualityTrack from "./qualityTrack";
 import DocTracker from "./docTrack";
-import axios from "axios";
 import { IoIosArrowDropup } from "react-icons/io";
 
+const DEMO_DATA = {
+  "demo-1": { docTrackValue: 50, qualityTrackValue: 75 },
+  "demo-2": { docTrackValue: 25, qualityTrackValue: 60 },
+};
+
 const Tracker = ({ formId }) => {
-  const [docTrackValue, setDocTrackValue] = useState(25);
-  const [qualityTrackValue, setQualityTrackValue] = useState(10);
-  const [formData, setFormData] = useState(null);
-
-  const processData = (formData) => {
-    let counter = 100;
-
-    // Checking A1-A9
-    for (let i = 1; i <= 9; i++) {
-      const answer = formData[`A${i}`];
-      if (answer === "No") {
-        counter -= 5;
-      }
-    }
-
-    // Checking G6-G9
-    const { G6, G7, G8 } = formData;
-    if (G6 !== "100L+") {
-      counter -= 5;
-    }
-    if (G7 !== "35L+") {
-      counter -= 5;
-    }
-    if (G8 === "No") {
-      counter -= 20;
-    }
-
-    return counter;
-  };
-
-  useEffect(() => {
-    // Fetch data using axios when formId changes
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:1337/api/forms/${formId}`
-        );
-        setFormData(response.data); // Set the retrieved data in state
-        const counter = processData(formData);
-        setQualityTrackValue(counter);
-      } catch (error) {
-        // Handle errors
-      }
-    };
-
-    if (formId) {
-      fetchData(); // Call fetchData when formId is available
-    }
-  }, [formId]);
+  const demo = DEMO_DATA[formId] || { docTrackValue: 25, qualityTrackValue: 70 };
+  const docTrackValue = demo.docTrackValue;
+  const qualityTrackValue = demo.qualityTrackValue;
 
   return (
     <section className="z-[0] min-h-[200px] h-full w-full grid grid-cols-[25%_75%] items-center justify-center">

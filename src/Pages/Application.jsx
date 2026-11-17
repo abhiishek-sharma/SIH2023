@@ -7,7 +7,6 @@ import React, { useState, useEffect } from "react";
 import Form from "../Components/Form";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Tracker from "../Components/DashBoard/tracker";
 
 function Application() {
@@ -41,76 +40,14 @@ function Application() {
   const [tableData, setTableData] = useState({
     application: {
       headers: ["S.No.", "Application", ""],
-      rows: [],
+      rows: [
+        { values: ["1", "New Technical Institution — B.Tech (CSE)", ""] },
+        { values: ["2", "Additional Course — M.Tech (AI & ML)", ""] },
+      ],
     },
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (uid) {
-          const response = await axios.get(
-            `http://localhost:1337/api/userdata?filters[uid][$eq]=${uid}`
-          );
-          const userData = response.data;
-          if (userData && userData.data && userData.data.length > 0) {
-            setRelationId(userData.data[0].id);
-            // Do something with the retrieved user data
-          }
-        }
-      } catch (error) {
-        // Handle error appropriately
-      }
-    };
-
-    fetchData(); // Fetch data when uid changes
-  }, [uid]);
-
-  useEffect(() => {
-    if (relationId != 0) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:1337/api/userdata/${relationId}?populate=forms`
-          );
-          const data = response.data;
-          setForm(data);
-        } catch (error) {
-          // Handle error appropriately
-        }
-      };
-
-      fetchData(); // Fetch data when the component mounts or when relationId changes
-    }
-  }, [relationId]);
-  const [formIds, setformIds] = useState([]);
-
-  useEffect(() => {
-    if (
-      form &&
-      form.data &&
-      form.data.attributes &&
-      form.data.attributes.forms &&
-      form.data.attributes.forms.data
-    ) {
-      const formIdsArray = form.data.attributes.forms.data.map(
-        (formItem) => formItem.id
-      );
-      setformIds(formIdsArray);
-      const newRows = form.data.attributes.forms.data.map(
-        (formItem, index) => ({
-          values: [(index + 1).toString(), formItem.attributes.type || "", ""],
-        })
-      );
-
-      setTableData((prevState) => ({
-        application: {
-          ...prevState.application,
-          rows: prevState.application.rows.concat(newRows),
-        },
-      }));
-    }
-  }, [form]);
+  const [formIds, setformIds] = useState(["demo-1", "demo-2"]);
 
   const siteData = {
     navbarData: {

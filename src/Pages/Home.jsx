@@ -18,6 +18,7 @@ function Home() {
     return key;
   }, {});
   const [inViewport, setInViewport] = useState(initialState);
+  const [scrolled, setScrolled] = useState(false);
   const calculateInViewport = (elementIds) => {
     elementIds.forEach((elementId) => {
       const element = document.getElementById(elementId);
@@ -45,11 +46,16 @@ function Home() {
       calculateInViewport(elemArr);
     };
 
-    window.addEventListener("scroll", handleScrollResize);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 700);
+      calculateInViewport(elemArr);
+    };
+
+    window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleScrollResize);
 
     return () => {
-      window.removeEventListener("scroll", handleScrollResize);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScrollResize);
     };
   }, elemArr);
@@ -102,7 +108,7 @@ function Home() {
       {/* Scroll-Top-Button */}
       <button
         className={`flex items-center justify-center fixed bottom-14 left-8 bg-blue-700 text-white shadow-[0_0_5px_rgba(0,0,0,.4)] hover:bg-white hover:text-black w-10 h-10 rounded-xl z-20 transition-transform duration-500 ${
-          window.scrollY > 700 ? "translate-x-0" : "-translate-x-[80px]"
+          scrolled ? "translate-x-0" : "-translate-x-[80px]"
         }`}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >

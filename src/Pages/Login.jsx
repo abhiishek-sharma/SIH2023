@@ -10,7 +10,6 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const AuthForm = ({ formType, background }) => {
   const [email, setEmail] = useState("");
@@ -64,35 +63,10 @@ const AuthForm = ({ formType, background }) => {
   const handleLoginFirst = async (event, email, password) => {
     event.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        const userData = {
-          uid: currentUser.uid,
-          email: currentUser.email,
-          name: currentUser.displayName || "Default Name", // Use display name or a default name if not available
-        };
-
-        // Make a POST request to your API using Axios to create user data entry
-        axios
-          .post("http://localhost:1337/api/userdata", { data: userData })
-          .then((response) => {
-            navigate("/Dashboard");
-          })
-          .catch((error) => {
-            // Show error notification for entry creation
-            alert("Error creating user data entry. Please try again.");
-          });
-      } else {
-        // If currentUser is null, show error notification
-        alert("User not found. Please log in again.");
-      }
+      await signInWithEmailAndPassword(auth, email, password);
       setEmail("");
       setPassword("");
+      navigate("/Dashboard");
     } catch (error) {
       alert("Login failed. Please check your credentials.");
     }
