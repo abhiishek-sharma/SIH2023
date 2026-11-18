@@ -3,6 +3,7 @@ import { useEffect } from "react"
 const INJECT_SRC = "https://cdn.botpress.cloud/webchat/v3.7/inject.js"
 const CONFIG_SRC =
   "https://files.bpcontent.cloud/2024/10/24/08/20241024085601-GNUQYZIS.js"
+const BRAND_COLOR = "#7B66FF"
 
 // While the pointer is over the open chat window, the page must not scroll:
 // the wheel only scrolls the chat's message list.
@@ -72,6 +73,15 @@ const chatBot = () => {
     inject.src = INJECT_SRC
     inject.async = true
     inject.onload = () => {
+      window.botpress?.on?.("webchat:initialized", () => {
+        window.botpress.config({
+          configuration: {
+            ...window.botpress.configuration,
+            color: BRAND_COLOR,
+          },
+        })
+      })
+
       const config = document.createElement("script")
       config.id = "bp-config"
       config.src = CONFIG_SRC
