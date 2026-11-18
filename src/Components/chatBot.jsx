@@ -4,7 +4,55 @@ const INJECT_SRC = "https://cdn.botpress.cloud/webchat/v3.7/inject.js"
 const CONFIG_SRC =
   "https://files.bpcontent.cloud/2024/10/24/08/20241024085601-GNUQYZIS.js"
 
+// While the pointer is over the open chat window, the page must not scroll:
+// the wheel only scrolls the chat's message list.
+const lockPageScrollOverChat = (e) => {
+  const fab = document.getElementById("fab-root")
+  if (!fab?.shadowRoot) return
+  const path = e.composedPath ? e.composedPath() : []
+  const overWindow = path.some(
+    (el) => el instanceof HTMLElement && el.classList.contains("bpContainer")
+  )
+  if (!overWindow) return // closed launcher or elsewhere on the page
+
+  e.preventDefault()
+  const list = fab.shadowRoot.querySelector(".bpMessageListContainer")
+  const scroller = list
+    ? [...list.children].find((el) =>
+        /(auto|scroll)/.test(getComputedStyle(el).overflowY)
+      )
+    : null
+  if (scroller) scroller.scrollTop += e.deltaY
+}
+
 const chatBot = () => {
+  useEffect(() => {
+    // The site's Lenis smooth-scroll drives the page from its own wheel
+    // listener and ignores preventDefault; this attribute makes Lenis skip
+    // wheel events that originate inside the chat widget.
+    const markWidget = () => {
+      const fab = document.getElementById("fab-root")
+      fab?.setAttribute("data-lenis-prevent", "")
+      return !!fab
+    }
+    const observer = new MutationObserver(() => {
+      if (markWidget()) observer.disconnect()
+    })
+    if (!markWidget())
+      observer.observe(document.body, { childList: true, subtree: true })
+
+    window.addEventListener("wheel", lockPageScrollOverChat, {
+      passive: false,
+      capture: true,
+    })
+    return () => {
+      observer.disconnect()
+      window.removeEventListener("wheel", lockPageScrollOverChat, {
+        capture: true,
+      })
+    }
+  }, [])
+
   useEffect(() => {
     if (document.getElementById("bp-inject")) return
 
