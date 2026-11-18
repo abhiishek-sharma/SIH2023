@@ -3,7 +3,7 @@
 **Runner-up, Smart India Hackathon 2023 (national level)**  
 Team FusionX · Problem statement by AICTE
 
-Live: [assistiq-blush.vercel.app](https://assistiq-blush.vercel.app)
+Live: [assistiq-aicte.vercel.app](https://assistiq-aicte.vercel.app)
 
 ---
 
