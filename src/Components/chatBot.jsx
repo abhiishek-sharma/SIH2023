@@ -4,6 +4,14 @@ const INJECT_SRC = "https://cdn.botpress.cloud/webchat/v3.7/inject.js"
 const CONFIG_SRC =
   "https://files.bpcontent.cloud/2024/10/24/08/20241024085601-GNUQYZIS.js"
 const BRAND_COLOR = "#7B66FF"
+// White launcher with a violet icon, so it stands out on the violet hero.
+const LAUNCHER_STYLES = `
+  .bpFabContainer {
+    background: #fff !important;
+    box-shadow: 0 4px 16px rgba(123, 102, 255, 0.45) !important;
+  }
+  .bpFabIcon { background-color: ${BRAND_COLOR} !important; }
+`
 
 // While the pointer is over the open chat window, the page must not scroll:
 // the wheel only scrolls the chat's message list.
@@ -78,6 +86,9 @@ const chatBot = () => {
           configuration: {
             ...window.botpress.configuration,
             color: BRAND_COLOR,
+            additionalStylesheet:
+              (window.botpress.configuration?.additionalStylesheet || "") +
+              LAUNCHER_STYLES,
           },
         })
       })
