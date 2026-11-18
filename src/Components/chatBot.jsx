@@ -1,60 +1,39 @@
-import React, { useState } from "react"
+import { useEffect } from "react"
 
-const SHAREABLE_URL =
-  "https://cdn.botpress.cloud/webchat/v3.7/shareable.html?configUrl=https://files.bpcontent.cloud/2024/10/24/08/20241024085601-L6J2JLYX.json"
+const INJECT_SRC = "https://cdn.botpress.cloud/webchat/v3.7/inject.js"
+const CONFIG_SRC =
+  "https://files.bpcontent.cloud/2024/10/24/08/20241024085601-GNUQYZIS.js"
 
 const chatBot = () => {
-  const [open, setOpen] = useState(false)
+  useEffect(() => {
+    if (document.getElementById("bp-inject")) return
 
-  return (
-    <>
-      {/* FAB toggle button */}
-      <button
-        onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Close Chanakya chat" : "Open Chanakya chat"}
-        style={{
-          position: "fixed",
-          bottom: "24px",
-          right: "24px",
-          width: "56px",
-          height: "56px",
-          borderRadius: "50%",
-          background: "#26ebeb",
-          border: "none",
-          cursor: "pointer",
-          boxShadow: "0 4px 16px rgba(38,235,235,0.5)",
-          zIndex: 9999,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "24px",
-          transition: "transform 0.2s",
-        }}
-      >
-        {open ? "✕" : "💬"}
-      </button>
+    // Wipe any stored Botpress conversation before the widget loads, so every
+    // page load starts fresh — a hard refresh (or a different visitor on the
+    // same machine) never resumes old chat history.
+    try {
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith("bp-webchat-"))
+        .forEach((k) => localStorage.removeItem(k))
+    } catch {
+      /* localStorage blocked (e.g. private mode) — widget still loads */
+    }
 
-      {/* Chat iframe */}
-      {open && (
-        <iframe
-          src={SHAREABLE_URL}
-          title="Chanakya AI Assistant"
-          allow="microphone"
-          style={{
-            position: "fixed",
-            bottom: "90px",
-            right: "24px",
-            width: "380px",
-            height: "580px",
-            border: "none",
-            borderRadius: "12px",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
-            zIndex: 9998,
-          }}
-        />
-      )}
-    </>
-  )
+    const inject = document.createElement("script")
+    inject.id = "bp-inject"
+    inject.src = INJECT_SRC
+    inject.async = true
+    inject.onload = () => {
+      const config = document.createElement("script")
+      config.id = "bp-config"
+      config.src = CONFIG_SRC
+      config.defer = true
+      document.body.appendChild(config)
+    }
+    document.body.appendChild(inject)
+  }, [])
+
+  return null
 }
 
 export default chatBot
