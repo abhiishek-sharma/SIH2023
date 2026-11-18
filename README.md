@@ -28,7 +28,7 @@ The goal: reduce rejections caused by misunderstood requirements and cut the tim
 |---|---|
 | Frontend | React, Vite |
 | Backend / BaaS | Firebase |
-| Chatbot | Botpress Cloud (v1 webchat) |
+| Chatbot | Botpress Cloud (shareable link, iframe embed) |
 | 3D visuals | Three.js |
 | Deployment | Vercel |
 
