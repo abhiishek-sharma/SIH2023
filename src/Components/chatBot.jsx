@@ -95,7 +95,9 @@ const chatBot = () => {
 
       const config = document.createElement("script")
       config.id = "bp-config"
-      config.src = CONFIG_SRC
+      // Botpress serves this file without Cache-Control, so browsers can keep
+      // a stale copy for weeks (an old launcher mode left the widget blank).
+      config.src = `${CONFIG_SRC}?v=${Date.now()}`
       config.defer = true
       document.body.appendChild(config)
     }
