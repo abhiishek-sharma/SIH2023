@@ -13,7 +13,7 @@ Engineering colleges in India apply for new course approvals through AICTE's App
 
 AssistIQ is a web portal that makes the approval process navigable:
 
-- **Chanakya** — an AI chatbot (Botpress) trained on the AICTE APH. Answers questions about eligibility criteria, fee structures, required documents, and timelines in plain language.
+- **Chanakya** — a guided-menu chatbot (Botpress) that walks institutes through AICTE Approval Process Handbook topics: new institutes, existing institutes, twinning programmes, intake, grant of approval, security deposit and fees. Users pick from menus rather than typing free-form questions.
 - **Application form** — dynamic form that generates the correct documentation checklist based on course type and intake size.
 - **Statement generator** — produces compliant supporting statements from structured inputs.
 - **Dashboard** — tracks application state and outstanding items.
